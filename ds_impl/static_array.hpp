@@ -7,7 +7,6 @@
 #include "../config.hpp"
 #include <cstdlib>
 #include <iostream>
-
 NS_BEGIN( my )
 
 /**
@@ -28,7 +27,6 @@ class static_array
     T *&data();
     bool is_empty();
     void fill( T fillValue );
-
   private:
     T mArr[N];
 };
@@ -68,6 +66,7 @@ T &my::static_array<T, N>::at( my::size_t index )
 {
     if ( index >= N )
     {
+        std::cout << "Index out of range" << std::endl; // TO REMOVE
         exit( 0 ); // TODO assertion "access out of range"
     }
     return mArr[index];
@@ -104,6 +103,5 @@ std::ostream &operator<<( std::ostream &os, my::static_array<T, N> &arr )
     }
     return os;
 }
-
 
 #endif // STATIC_ARRAY_HPP
