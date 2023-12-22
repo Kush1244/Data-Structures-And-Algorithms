@@ -74,16 +74,34 @@ my::static_array<T, N>::static_array(T t_initVal) {
     mArr[i] = t_initVal;
   }
 }
+
+/**
+ * @return size of the array
+ */
 template <class T, my::size_t N>
 my::size_t my::static_array<T, N>::size() {
   return N;
 }
 
+/**
+ * @brief Doesn't checks for out of bounds
+ *
+ * @param index index
+ *
+ * @return  data at provided index
+ */
 template <class T, my::size_t N>
 T &my::static_array<T, N>::operator[](my::size_t index) {
   return mArr[index];
 }
 
+/**
+ * @brief Checks for out of bounds
+ *
+ * @param index index
+ *
+ * @return  data at provided index
+ */
 template <class T, my::size_t N>
 T &my::static_array<T, N>::at(my::size_t index) {
   if (index >= N) {
@@ -93,23 +111,48 @@ T &my::static_array<T, N>::at(my::size_t index) {
   return mArr[index];
 }
 
+/**
+ * @return pointer to the first element to the array
+ */
 template <class T, my::size_t N>
 T *&my::static_array<T, N>::data() {
   return mArr;
 }
 
+/**
+ * @brief checks whether array is empty or not
+ *
+ * @return array size != 0
+ */
 template <class T, my::size_t N>
 bool my::static_array<T, N>::is_empty() {
   return N == 0;
 }
 
+/**
+ * @brief fill the whole container with a particular value
+ *
+ * @param fillValue value to filled with
+ */
 template <class T, my::size_t N>
 void my::static_array<T, N>::fill(T fillValue) {
   for (my::size_t i = 0; i < N; i++) {
     mArr[i] = fillValue;
   }
 }
+
 //////////////////////////// std::ostream overloading ///////////////
+/**
+ * @brief prints my::static_array using std::cout. In case of custom data type T
+ * overload the std::ostream for T
+ *
+ * @tparam T data type
+ * @tparam N size of the static_array
+ * @param os std::cout
+ * @param arr static_array
+ *
+ * @return std::cout
+ */
 template <class T, my::size_t N>
 std::ostream &operator<<(std::ostream &os, my::static_array<T, N> &arr) {
   for (my::size_t i = 0; i < N; i++) {
@@ -124,6 +167,11 @@ my::iterator<T> my::static_array<T, N>::begin() {
   return my::iterator<T>(mArr);
 }
 
+/**
+ * @brief Iterator pointing to the end of the array
+ *
+ * @return iterator pointing to the end of array
+ */
 template <class T, my::size_t N>
 my::iterator<T> my::static_array<T, N>::end() {
   return my::iterator<T>(mArr + N);
