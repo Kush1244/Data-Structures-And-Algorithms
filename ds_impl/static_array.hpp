@@ -1,13 +1,50 @@
 #ifndef STATIC_ARRAY_HPP
 #define STATIC_ARRAY_HPP 1
-// TODO Create static array similar to std::array -> Done
-// TODO overload the std::ostream for the class -> Done
-// TODO Create Iterator support for static_array
 
 #include "../config.hpp"
 #include <cstdlib>
 #include <iostream>
 NS_BEGIN( my )
+
+
+template <typename T>
+class iterator
+{
+  public:
+    explicit iterator( T *ptr ) : m_Ptr( ptr )
+    {
+    }
+
+    iterator &operator++( int )
+    {
+        m_Ptr++;
+        return *this;
+    }
+
+    iterator &operator++()
+    {
+        m_Ptr++;
+        return *this;
+    }
+
+    T &operator*()
+    {
+        return *m_Ptr;
+    }
+    T *&get_pointer()
+    {
+        return m_Ptr;
+    }
+
+  private:
+    T *m_Ptr;
+};
+
+template <typename T>
+bool operator!=( iterator<T> &first, iterator<T> &second )
+{
+    return first.get_pointer() != second.get_pointer();
+}
 
 /**
  * @brief Fixed Length Array
@@ -27,6 +64,9 @@ class static_array
     T *&data();
     bool is_empty();
     void fill( T fillValue );
+    iterator<T> begin();
+    iterator<T> end();
+
   private:
     T mArr[N];
 };
@@ -67,7 +107,7 @@ T &my::static_array<T, N>::at( my::size_t index )
     if ( index >= N )
     {
         std::cout << "Index out of range" << std::endl; // TO REMOVE
-        exit( 0 ); // TODO assertion "access out of range"
+        exit( 1 ); // TODO assertion "access out of range"
     }
     return mArr[index];
 }
@@ -93,7 +133,7 @@ void my::static_array<T, N>::fill( T fillValue )
         mArr[i] = fillValue;
     }
 }
-
+//////////////////////////// std::cout implementation ///////////////
 template <class T, my::size_t N>
 std::ostream &operator<<( std::ostream &os, my::static_array<T, N> &arr )
 {
@@ -102,6 +142,19 @@ std::ostream &operator<<( std::ostream &os, my::static_array<T, N> &arr )
         std::cout << arr[i] << " ";
     }
     return os;
+}
+
+//////////////////////////////// Iterator Implementation ////////////////////
+template <class T, my::size_t N>
+my::iterator<T> my::static_array<T, N>::begin()
+{
+    return my::iterator<T>( mArr );
+}
+
+template <class T, my::size_t N>
+my::iterator<T> my::static_array<T, N>::end()
+{
+    return my::iterator<T>( mArr + N );
 }
 
 #endif // STATIC_ARRAY_HPP
